@@ -7,9 +7,14 @@ import org.joda.time.format.DateTimeFormat
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly}
 import scala.language.experimental.macros
-import scala.reflect.api.Trees
 import scala.reflect.macros.blackbox.Context
 
+/** This class invokes macro implementation and sets required parameters
+  *
+  * @param warnAfter DateTime class containing the date as of which the entity is considered as technical debt
+  * @param desc a short description of technical debt
+  * @param ticket a URI (optional) to a ticket (Jira, RedMine)
+  */
 @compileTimeOnly("Enable Macro Paradise for Expansion of Annotations via Macros.")
 class TechnicalDebt(warnAfter: DateTime, desc: String, ticket: Option[URI] = None) extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro TechnicalDebt.impl
@@ -67,34 +72,18 @@ object TechnicalDebt {
       annottees.map(_.tree).toList match {
         case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends ..$parents { $self => ..$stats }" :: Nil => {
           issueWarnings(dtObj, tpname)
-//          if (dtObj.isBefore(DateTime.now())) {
-//            c.warning(NoPosition, s"The class $tpname is marked as technical debt as of ${dtFormat.print(dtObj)}. Please, reconsider refactoring it.")
-//            c.warning(NoPosition, s"The technical debt description for the class $tpname: $desc")
-//          }
           q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends ..$parents { $self => ..$stats }"
         }
         case q"$mods object $tname extends { ..$earlydefns } with ..$parents { $self => ..$body }" :: Nil => {
           issueWarnings(dtObj, tname)
-//          if (dtObj.isBefore(DateTime.now())) {
-//            c.warning(NoPosition, s"The object $tname is marked as technical debt as of ${dtFormat.print(dtObj)}. Please, reconsider refactoring it.")
-//            c.warning(NoPosition, s"The technical debt description for the object $tname: $desc")
-//          }
           q"$mods object $tname extends { ..$earlydefns } with ..$parents { $self => ..$body }"
         }
         case q"$mods trait $tpname[..$tparams] extends { ..$earlydefns } with ..$parents { $self => ..$stats }" :: Nil => {
           issueWarnings(dtObj, tpname)
-//          if (dtObj.isBefore(DateTime.now())) {
-//            c.warning(NoPosition, s"The trait $tpname is marked as technical debt as of ${dtFormat.print(dtObj)}. Please, reconsider refactoring it.")
-//            c.warning(NoPosition, s"The technical debt description for the trait $tpname: $desc")
-//          }
           q"$mods trait $tpname[..$tparams] extends { ..$earlydefns } with ..$parents { $self => ..$stats }"
         }
         case q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr" :: Nil => {
           issueWarnings(dtObj, tname)
-//          if (dtObj.isBefore(DateTime.now())) {
-//            c.warning(NoPosition, s"The method $tname is marked as technical debt as of ${dtFormat.print(dtObj)}. Please, reconsider refactoring it.")
-//            c.warning(NoPosition, s"The technical debt description for the method $tname: $desc")
-//          }
           q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr"
         }
         case _ => c.abort(c.enclosingPosition, "Could not recognize Scala entity, please report a bug to Github.")
