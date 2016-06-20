@@ -1,7 +1,3 @@
 .idea
 target
-macros/project/
-macros/src/main/java/
-macros/src/main/scala-2.11/
-project/project/
-src/
+project/
