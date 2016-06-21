@@ -3,7 +3,7 @@ import Keys._
 
 object Commons {
 
-  val vr = "0.1.1-SNAPSHOT"
+  val vr = "0.1.2-SNAPSHOT"
   val scalaVr = "2.11.8"
   val crossVr = Seq("2.11.6", "2.11.7", "2.11.8")
 

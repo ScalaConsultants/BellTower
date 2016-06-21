@@ -58,22 +58,5 @@ The TechnicalDebt annotation takes three parameters:
 - The description of a technical debt issue
 - The URI to a ticket (only available when inspecting the code)
 
-## Known issues
-
-Currently BellTower library issues appropriate warnings for Scala versions 2.11.7 and 2.11.6; however, using these versions
-gives the following warning while compiling:
-
-```
-[warn] Scala version was updated by one of library dependencies:
-[warn]  * org.scala-lang:scala-library:(2.11.7, 2.11.6, 2.11.4) -> 2.11.8
-[warn] To force scalaVersion, add the following:
-[warn]  ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
-[warn] Run 'evicted' to see detailed eviction warnings
-```
-
-On the other hand, using Scala 2.11.8 removes the warning available above; yet, the warnings produced by annotations return
-to default form.
-
-Solving this issue requires changes to `build.sbt`.
 
 The tests are missing.
